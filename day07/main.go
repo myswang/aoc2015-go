@@ -11,9 +11,6 @@ import (
 
 const INPUT = "input.txt"
 
-type Result struct {
-}
-
 var env = make(map[string][]string)
 var cache = make(map[string]uint16)
 
