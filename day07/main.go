@@ -19,10 +19,9 @@ func eval(id string) uint16 {
 		return val
 	}
 
-	if v, err := strconv.Atoi(id); err == nil {
-		val := uint16(v)
-		cache[id] = val
-		return val
+	if val, err := strconv.Atoi(id); err == nil {
+		cache[id] = uint16(val)
+		return cache[id]
 	}
 
 	op := env[id]
@@ -30,35 +29,33 @@ func eval(id string) uint16 {
 		log.Fatalf("Unknown wire or value: %v", id)
 	}
 
-	var val uint16
 	switch len(op) {
 	case 3:
 		switch op[1] {
 		case "AND":
-			val = eval(op[0]) & eval(op[2])
+			cache[id] = eval(op[0]) & eval(op[2])
 		case "OR":
-			val = eval(op[0]) | eval(op[2])
+			cache[id] = eval(op[0]) | eval(op[2])
 		case "LSHIFT":
-			val = eval(op[0]) << eval(op[2])
+			cache[id] = eval(op[0]) << eval(op[2])
 		case "RSHIFT":
-			val = eval(op[0]) >> eval(op[2])
+			cache[id] = eval(op[0]) >> eval(op[2])
 		default:
 			log.Fatalf("Invalid op: %v", op[1])
 		}
 	case 2:
 		if op[0] == "NOT" {
-			val = ^eval(op[1])
+			cache[id] = ^eval(op[1])
 		} else {
 			log.Fatalf("Invalid op: %v", op[0])
 		}
 	case 1:
-		val = eval(op[0])
+		cache[id] = eval(op[0])
 	default:
 		log.Fatalf("Unexpected op length: %v (%v)", len(op), op)
 	}
 
-	cache[id] = val
-	return val
+	return cache[id]
 }
 
 func setup() {
