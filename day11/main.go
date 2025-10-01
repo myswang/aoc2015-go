@@ -52,57 +52,36 @@ func increment(input []int, idx int) {
 	}
 }
 
-func printPassword(input []int) {
+func nextPassword(inputStr string) string {
+	input := []int{}
+
+	for _, c := range inputStr {
+		val := strings.IndexRune(LETTERS, c)
+		input = append(input, val)
+	}
+
+	for {
+		ok := skipBad(input)
+		if hasPair(input) && hasRun(input) {
+			break
+		}
+		if !ok {
+			increment(input, len(input)-1)
+		}
+	}
 	output := ""
 	for _, val := range input {
 		output += string(LETTERS[val])
 	}
-
-	fmt.Println(output)
+	return output
 }
 
 func part1() {
-	inputStr := "vzbxkghb"
-	input := []int{}
-
-	for _, c := range inputStr {
-		val := strings.IndexRune(LETTERS, c)
-		input = append(input, val)
-	}
-
-	for {
-		ok := skipBad(input)
-		if hasPair(input) && hasRun(input) {
-			break
-		}
-		if !ok {
-			increment(input, len(input)-1)
-		}
-	}
-
-	printPassword(input)
+	fmt.Println(nextPassword("vzbxkghb"))
 }
 
 func part2() {
-	inputStr := "vzbxxzaa"
-	input := []int{}
-
-	for _, c := range inputStr {
-		val := strings.IndexRune(LETTERS, c)
-		input = append(input, val)
-	}
-
-	for {
-		ok := skipBad(input)
-		if hasPair(input) && hasRun(input) {
-			break
-		}
-		if !ok {
-			increment(input, len(input)-1)
-		}
-	}
-
-	printPassword(input)
+	fmt.Println(nextPassword("vzbxxzaa"))
 }
 
 func main() {
